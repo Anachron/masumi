@@ -1,8 +1,9 @@
 require ['common'], () ->
   require [
-      'backbone.marionette',
       'jquery',
-    ], (Marionette, $) ->
+      'underscore',
+      'backbone.marionette'
+    ], ($, _, Marionette) ->
 
       app = new Marionette.Application()
 
