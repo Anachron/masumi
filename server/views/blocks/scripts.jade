@@ -1,0 +1,13 @@
+append scripts
+
+  if reload
+    //- If live-reload is active
+    script(src='/socket.io/socket.io.js')
+    script(src='/javascripts/reload-client.js')
+    
+  if optimize
+    //- If it's an optimized build, use the bundled scripts
+    script(src='/javascripts/'+device+'-built.js')
+  else
+    //- Else, use RequireJS and specify the main app
+    script(src='/javascripts/vendor/requirejs/require.js', data-main='/javascripts/'+device+'.js')
