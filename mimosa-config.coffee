@@ -33,10 +33,12 @@ exports.config = {
   bower:
     copy:
       mainOverrides:
-        'handlebars': [
+        'handlebars.js': [
+          'dist/handlebars',
           'handlebars.js'
         ]
         'require-hbs': [
+          'hbs-builder.js',
           'hbs.js'
         ]
         'semantic': [

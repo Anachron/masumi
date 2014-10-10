@@ -1,16 +1,18 @@
 require ['common'], () ->
+
   require [
       'jquery',
       'underscore',
       'backbone',
-      'backbone.marionette'
-    ], ($, _, Backbone, Marionette) ->
+      'backbone.marionette',
+      'j/desktop/views/item/header'
+    ], ($, _, Backbone, Marionette, headerItemView) ->
 
       app = new Marionette.Application()
 
       # Initialize the spinner hiding
       app.on 'start', (options) ->
-        $('.spinner').hide()
+        $('.ui.active.dimmer').remove()
 
       # Start the app
       app.start()

@@ -5,7 +5,8 @@ requirejs.config
     'handlebars':
       init: () ->
         #https://github.com/wycats/handlebars.js/issues/333
-        window.Handlebars = Handlebars
+        this.Handlebars = Handlebars;
+        return this.Handlebars;
       exports: 'Handlebars'
 
   paths:
