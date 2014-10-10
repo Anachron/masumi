@@ -2,7 +2,7 @@
   "name": "masumi",
   "version": "0.1.0",
   "dependencies": {
-    "backbone": "~1.1.0",
+    "backbone": "1.1.2",
     "backbone.babysitter": "latest",
     "backbone.epoxy": "latest",
     "backbone.localstorage": "latest",
@@ -15,11 +15,11 @@
     "require-css": "~0.1.2",
     "require-text": "requirejs/text",
     "requirejs": "~2.1.15",
-    "semantic": "~0.19.3",
+    "semantic": "Semantic-Org/Semantic-UI#1.0",
     "underscore": "~1.4.4"
   },
   "resolutions": {
     "underscore": ">=1.5.1",
-    "backbone": "1.0.0 - 1.1.2"
+    "backbone": "1.1.2"
   }
 }

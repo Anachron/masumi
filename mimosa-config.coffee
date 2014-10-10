@@ -40,10 +40,10 @@ exports.config = {
           'hbs.js'
         ]
         'semantic': [
-          'build/packaged/css/semantic.css',
-          'build/packaged/fonts': '../../fonts/vendor/semantic',
-          'build/packaged/images': '../../images/vendor/semantic',
-          'build/packaged/javascript/semantic.js'
+          'build/packaged/definitions/css/semantic.css',
+          'build/packaged/definitions/javascript/semantic.js',
+          'build/packaged/themes/packages/default/assets/fonts': '../../fonts/vendor/semantic',
+          'build/packaged/themes/packages/default/assets/images': '../../images/vendor/semantic'
         ]
 
   # Adhoc module allows us to execute local project/skeleton based scripts
@@ -68,6 +68,7 @@ exports.config = {
     extensions: ['css']
     files:
       "$cssVendor$/semantic/semantic.css":
-        "../fonts/": "/fonts/vendor/semantic/",
-        "../images/": "/images/vendor/semantic/"
+        "../../themes/packages/default/assets/fonts": "/fonts/vendor/semantic",
+        "../../themes/packages/default/assets/images": "/images/vendor/semantic"
+
 }

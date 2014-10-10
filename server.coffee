@@ -12,7 +12,7 @@ userAgent       = require 'express-useragent' # Get Request Device
 exports.startServer = (config, callback) ->
 
   port = process.env.PORT or config.server.port
-  env = process.env.NODE_ENV or 'development';
+  env = process.env.NODE_ENV or 'development'
 
   app = express()
 
