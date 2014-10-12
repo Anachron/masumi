@@ -1,0 +1,34 @@
+extends /desktop/index
+
+append title
+  title
+    | Page not found
+
+block styles
+  link(rel='stylesheet', href='/stylesheets/vendor/semantic/semantic.css' + cachebust)
+  style( type="text/css" ).
+    body{
+      padding-top: 5em;
+    }
+    .content{
+      width: 50em;
+      margin: 0px auto;
+    }
+    .warning.header{
+      margin-top: 5em;
+      margin-bottom: 2em;
+    }
+
+block scripts
+
+append main
+  div.content
+    div.ui.icon.error.message
+      i.warning.circle.icon
+      div.content
+        div.header
+          | Not found
+        p
+          | The page that you have requested has not been found.
+
+block load
