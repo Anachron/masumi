@@ -36,20 +36,27 @@ exports.startServer = (config, callback) ->
   if env == 'development'
     app.use errorHandler()
 
-  options =
+  viewVars =
     cachebust:  if env isnt "production" then "?b=#{(new Date()).getTime()}" else ''
     optimize:   config.isOptimize ? false
     reload:     config.liveReload.enabled
     device:     null
+    page:       null
+    viewPath:   null
 
-  app.get '/', (req, res) ->
+  app.use agent = ( req, res, next ) ->
     if req.useragent.isMobile
-      options.device = 'mobile'
+      viewVars.device = 'mobile'
     else if req.useragent.isBot
-      options.device = 'bot'
+      viewVars.device = 'bot'
     else #if req.useragent.isDesktop
-      options.device = 'desktop'
+      viewVars.device = 'desktop'
+    next()
 
-    res.render options.device, options
+  require( './server/routes/default' ).setup( app, viewVars)
+
+  app.get '*', ( req, res, next ) ->
+    viewVars.viewPath = viewVars.device + '/' + viewVars.page
+    res.render viewVars.viewPath, viewVars
 
   callback server, io

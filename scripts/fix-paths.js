@@ -14,7 +14,7 @@ var _fixPaths = function( mimosaConfig, options, next ) {
     return next();
   }
 
-  path = require ( 'path' );
+  path = require( 'path' );
 
   // Check all files
   files.forEach( function(file, i) {
