@@ -41,6 +41,12 @@ exports.startServer = (config, callback) ->
     optimize:   config.isOptimize ? false
     reload:     config.liveReload.enabled
 
+  # Rest routes
+
+  require( './server/routes/rest' ).setup( app )
+
+  # Normale routes
+
   app.use setup = ( req, res, next ) ->
     viewVars.device = null
     viewVars.page = null
@@ -63,5 +69,9 @@ exports.startServer = (config, callback) ->
       res.render viewVars.viewPath, viewVars
     else
       res.render 'codes/notFound', viewVars
+
+  # Sockets
+
+  require( './server/sockets/acl' ).setup( app )
 
   callback server, io
