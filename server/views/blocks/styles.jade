@@ -2,5 +2,6 @@ append styles
   case device
     default
       //- If device is a desktop, use semantic
+      link(rel='stylesheet', href='/stylesheets/vendor/normalize.css/normalize.css' + cachebust)
       link(rel='stylesheet', href='/stylesheets/vendor/semantic/semantic.css' + cachebust)
       link(rel='stylesheet', href='/stylesheets/desktop/style.css' + cachebust)

@@ -11,6 +11,7 @@
     "cocktail": "~0.5.8",
     "handlebars.js": "http://builds.handlebarsjs.com.s3.amazonaws.com/handlebars-v2.0.0.js",
     "jquery": "~2.1.0",
+    "normalize.css": "~3.0.2",
     "require-hbs": "epeli/requirejs-hbs",
     "require-css": "~0.1.2",
     "require-text": "requirejs/text",
