@@ -113,8 +113,8 @@ $.api = $.fn.api = function(parameters) {
             return;
           }
           // determine if an api event already occurred
-          if(module.is.loading() && !settings.allowMultiple) {
-            module.debug('Request cancelled previous request is still pending');
+          if(module.is.loading() && settings.throttle === 0 ) {
+            module.debug('Cancelling request, previous request is still pending');
             return;
           }
 
@@ -124,7 +124,7 @@ $.api = $.fn.api = function(parameters) {
           }
 
           // Add form content
-          if(settings.serializeForm !== false || $module.is('form')) {
+          if(settings.serializeForm !== false || $context.is('form')) {
             if(settings.serializeForm == 'json') {
               $.extend(true, settings.data, module.get.formData());
             }
@@ -181,9 +181,17 @@ $.api = $.fn.api = function(parameters) {
 
           module.verbose('Creating AJAX request with settings', ajaxSettings);
 
-          // request provides a wrapper around xhr
-          module.request = module.create.request();
-          module.xhr = module.create.xhr();
+          if( !module.is.loading() ) {
+            module.request = module.create.request();
+            module.xhr = module.create.xhr();
+          }
+          else {
+            // throttle additional requests
+            module.timer = setTimeout(function() {
+              module.request = module.create.request();
+              module.xhr = module.create.xhr();
+            }, settings.throttle);
+          }
 
         },
 
@@ -393,10 +401,10 @@ $.api = $.fn.api = function(parameters) {
                     setTimeout(module.remove.error, settings.errorDuration);
                   }
                   module.debug('API Request error:', errorMessage);
-                  $.proxy(settings.onFailure, context)(errorMessage, $module);
+                  $.proxy(settings.onError, context)(errorMessage, context);
                 }
                 else {
-                  $.proxy(settings.onAbort, context)(errorMessage, $module);
+                  $.proxy(settings.onAbort, context)(errorMessage, context);
                   module.debug('Request Aborted (Most likely caused by page change or CORS Policy)', status, httpMessage);
                 }
               }
@@ -455,22 +463,30 @@ $.api = $.fn.api = function(parameters) {
               runSettings
             ;
             runSettings = $.proxy(settings.beforeSend, $module)(settings);
-            if(runSettings.success !== undefined) {
-              module.debug('Legacy success callback detected', runSettings);
-              module.error(error.legacyParameters);
-              runSettings.onSuccess = runSettings.success;
+            if(runSettings) {
+              if(runSettings.success !== undefined) {
+                module.debug('Legacy success callback detected', runSettings);
+                module.error(error.legacyParameters);
+                runSettings.onSuccess = runSettings.success;
+              }
+              if(runSettings.failure !== undefined) {
+                module.debug('Legacy failure callback detected', runSettings);
+                module.error(error.legacyParameters);
+                runSettings.onFailure = runSettings.failure;
+              }
+              if(runSettings.complete !== undefined) {
+                module.debug('Legacy complete callback detected', runSettings);
+                module.error(error.legacyParameters);
+                runSettings.onComplete = runSettings.complete;
+              }
             }
-            if(runSettings.failure !== undefined) {
-              module.debug('Legacy failure callback detected', runSettings);
-              module.error(error.legacyParameters);
-              runSettings.onFailure = runSettings.failure;
+            if(runSettings === undefined) {
+              module.error(error.noReturnedValue);
             }
-            if(runSettings.complete !== undefined) {
-              module.debug('Legacy complete callback detected', runSettings);
-              module.error(error.legacyParameters);
-              runSettings.onComplete = runSettings.complete;
-            }
-            return runSettings;
+            return (runSettings !== undefined)
+              ? runSettings
+              : settings
+            ;
           },
           defaultData: function() {
             var
@@ -518,17 +534,14 @@ $.api = $.fn.api = function(parameters) {
             var
               formData
             ;
-            if(settings.serializeForm == 'json') {
-              if($(this).toJSON === undefined ) {
-                module.error(error.missingSerialize);
-                return;
-              }
-              formData = $form.toJSON();
+            if($(this).serializeObject() !== undefined) {
+              formData = $form.serializeObject();
             }
             else {
+              module.error(error.missingSerialize);
               formData = $form.serialize();
             }
-            module.debug('Retrieving form data', formData);
+            module.debug('Retrieved form data', formData);
             return formData;
           },
           templateURL: function(action) {
@@ -620,7 +633,7 @@ $.api = $.fn.api = function(parameters) {
               performance.push({
                 'Name'           : message[0],
                 'Arguments'      : [].slice.call(message, 1) || '',
-                'Element'        : element,
+                //'Element'        : element,
                 'Execution Time' : executionTime
               });
             }
@@ -745,31 +758,23 @@ $.api.settings = {
   // event binding
   on              : 'auto',
   filter          : '.disabled',
-  context         : false,
   stateContext    : false,
+
+  // state
+  loadingDuration : 0,
+  errorDuration   : 2000,
 
   // templating
   action          : false,
   url             : false,
 
-  regExp  : {
-    required: /\{\$*[A-z0-9]+\}/g,
-    optional: /\{\/\$*[A-z0-9]+\}/g,
-  },
-
   // data
   urlData         : {},
-
 
   // ui
   defaultData     : true,
   serializeForm   : false,
-  throttle        : 100,
-  allowMultiple   : false,
-
-  // state
-  loadingDuration : 0,
-  errorDuration   : 2000,
+  throttle        : 0,
 
   // jQ ajax
   method          : 'get',
@@ -783,6 +788,7 @@ $.api.settings = {
   onSuccess   : function(response, $module) {},
   onComplete  : function(response, $module) {},
   onFailure   : function(errorMessage, $module) {},
+  onError     : function(errorMessage, $module) {},
   onAbort     : function(errorMessage, $module) {},
 
   successTest : false,
@@ -795,12 +801,18 @@ $.api.settings = {
     JSONParse         : 'JSON could not be parsed during error handling',
     legacyParameters  : 'You are using legacy API success callback names',
     missingAction     : 'API action used but no url was defined',
-    missingSerialize  : 'Serializing a Form requires toJSON to be included',
+    missingSerialize  : 'Required dependency jquery-serialize-object missing, using basic serialize',
     missingURL        : 'No URL specified for api event',
+    noReturnedValue   : 'The beforeSend callback must return a settings object, beforeSend ignored.',
     parseError        : 'There was an error parsing your request',
     requiredParameter : 'Missing a required URL parameter: ',
     statusMessage     : 'Server gave an error: ',
     timeout           : 'Your request timed out'
+  },
+
+  regExp  : {
+    required: /\{\$*[A-z0-9]+\}/g,
+    optional: /\{\/\$*[A-z0-9]+\}/g,
   },
 
   className: {
@@ -6313,7 +6325,12 @@ $.fn.dimmer = function(parameters) {
           else {
             $dimmable = $module;
             if( module.has.dimmer() ) {
-              $dimmer = $dimmable.children(selector.dimmer).first();
+              if(settings.dimmerName) {
+                $dimmer = $dimmable.children(selector.dimmer).filter('.' + settings.dimmerName);
+              }
+              else {
+                $dimmer = $dimmable.children(selector.dimmer);
+              }
             }
             else {
               $dimmer = module.create();
@@ -6339,7 +6356,7 @@ $.fn.dimmer = function(parameters) {
             module.set.pageDimmer();
           }
 
-          if(settings.on == 'click' && settings.closable) {
+          if( module.is.closable() ) {
             module.verbose('Adding dimmer close event', $dimmer);
             $dimmer
               .on(clickEvent + eventNamespace, module.event.click)
@@ -6371,7 +6388,6 @@ $.fn.dimmer = function(parameters) {
         },
 
         event: {
-
           click: function(event) {
             module.verbose('Determining if event occured on dimmer', event);
             if( $dimmer.find(event.target).size() === 0 || $(event.target).is(selector.content) ) {
@@ -6379,7 +6395,6 @@ $.fn.dimmer = function(parameters) {
               event.stopImmediatePropagation();
             }
           }
-
         },
 
         addContent: function(element) {
@@ -6393,7 +6408,63 @@ $.fn.dimmer = function(parameters) {
         },
 
         create: function() {
-          return $( settings.template.dimmer() ).appendTo($dimmable);
+          var
+            $element = $( settings.template.dimmer() )
+          ;
+          if(settings.variation) {
+            module.debug('Creating dimmer with variation', settings.variation);
+            $element.addClass(className.variation);
+          }
+          if(settings.dimmerName) {
+            module.debug('Creating named dimmer', settings.dimmerName);
+            $element.addClass(settings.dimmerName);
+          }
+          $element
+            .appendTo($dimmable)
+          ;
+          return $element;
+        },
+
+        show: function(callback) {
+          callback = $.isFunction(callback)
+            ? callback
+            : function(){}
+          ;
+          module.debug('Showing dimmer', $dimmer, settings);
+          if( (!module.is.dimmed() || module.is.animating()) && module.is.enabled() ) {
+            module.animate.show(callback);
+            $.proxy(settings.onShow, element)();
+            $.proxy(settings.onChange, element)();
+          }
+          else {
+            module.debug('Dimmer is already shown or disabled');
+          }
+        },
+
+        hide: function(callback) {
+          callback = $.isFunction(callback)
+            ? callback
+            : function(){}
+          ;
+          if( module.is.dimmed() || module.is.animating() ) {
+            module.debug('Hiding dimmer', $dimmer);
+            module.animate.hide(callback);
+            $.proxy(settings.onHide, element)();
+            $.proxy(settings.onChange, element)();
+          }
+          else {
+            module.debug('Dimmer is not visible');
+          }
+        },
+
+        toggle: function() {
+          module.verbose('Toggling dimmer visibility', $dimmer);
+          if( !module.is.dimmed() ) {
+            module.show();
+          }
+          else {
+            module.hide();
+          }
         },
 
         animate: {
@@ -6402,13 +6473,15 @@ $.fn.dimmer = function(parameters) {
               ? callback
               : function(){}
             ;
-            module.set.dimmed();
-            if(settings.on != 'hover' && settings.useCSS && $.fn.transition !== undefined && $dimmer.transition('is supported')) {
+            if(settings.useCSS && $.fn.transition !== undefined && $dimmer.transition('is supported')) {
               $dimmer
                 .transition({
                   animation : settings.transition + ' in',
-                  queue     : true,
+                  queue       : false,
                   duration  : module.get.duration(),
+                  start     : function() {
+                    module.set.dimmed();
+                  },
                   complete  : function() {
                     module.set.active();
                     callback();
@@ -6418,6 +6491,7 @@ $.fn.dimmer = function(parameters) {
             }
             else {
               module.verbose('Showing dimmer animation with javascript');
+              module.set.dimmed();
               $dimmer
                 .stop()
                 .css({
@@ -6438,14 +6512,16 @@ $.fn.dimmer = function(parameters) {
               ? callback
               : function(){}
             ;
-            if(settings.on != 'hover' && settings.useCSS && $.fn.transition !== undefined && $dimmer.transition('is supported')) {
+            if(settings.useCSS && $.fn.transition !== undefined && $dimmer.transition('is supported')) {
               module.verbose('Hiding dimmer with css');
-              module.remove.dimmed();
               $dimmer
                 .transition({
-                  animation : settings.transition + ' out',
-                  duration  : module.get.duration(),
-                  queue     : true,
+                  animation   : settings.transition + ' out',
+                  queue       : false,
+                  duration    : module.get.duration(),
+                  start: function() {
+                    module.remove.dimmed();
+                  },
                   complete  : function() {
                     module.remove.active();
                     callback();
@@ -6459,8 +6535,8 @@ $.fn.dimmer = function(parameters) {
               $dimmer
                 .stop()
                 .fadeOut(module.get.duration(), function() {
-                  $dimmer.removeAttr('style');
                   module.remove.active();
+                  $dimmer.removeAttr('style');
                   callback();
                 })
               ;
@@ -6487,7 +6563,12 @@ $.fn.dimmer = function(parameters) {
 
         has: {
           dimmer: function() {
-            return ( $module.children(selector.dimmer).size() > 0 );
+            if(settings.dimmerName) {
+              return ($module.children(selector.dimmer).filter('.' + settings.dimmerName).size() > 0);
+            }
+            else {
+              return ( $module.children(selector.dimmer).size() > 0 );
+            }
           }
         },
 
@@ -6496,7 +6577,16 @@ $.fn.dimmer = function(parameters) {
             return $dimmer.hasClass(className.active);
           },
           animating: function() {
-            return ( $dimmer.is(':animated') || $dimmer.hasClass(className.transition) );
+            return ( $dimmer.is(':animated') || $dimmer.hasClass(className.animating) );
+          },
+          closable: function() {
+            if(settings.closable == 'auto') {
+              if(settings.on == 'hover') {
+                return false;
+              }
+              return true;
+            }
+            return settings.closable;
           },
           dimmer: function() {
             return $module.is(selector.dimmer);
@@ -6529,11 +6619,7 @@ $.fn.dimmer = function(parameters) {
 
         set: {
           active: function() {
-            module.set.dimmed();
-            $dimmer
-              .removeClass(className.transition)
-              .addClass(className.active)
-            ;
+            $dimmer.addClass(className.active);
           },
           dimmable: function() {
             $dimmable.addClass(className.dimmable);
@@ -6552,7 +6638,6 @@ $.fn.dimmer = function(parameters) {
         remove: {
           active: function() {
             $dimmer
-              .removeClass(className.transition)
               .removeClass(className.active)
             ;
           },
@@ -6561,48 +6646,6 @@ $.fn.dimmer = function(parameters) {
           },
           disabled: function() {
             $dimmer.removeClass(className.disabled);
-          }
-        },
-
-        show: function(callback) {
-          callback = $.isFunction(callback)
-            ? callback
-            : function(){}
-          ;
-          module.debug('Showing dimmer', $dimmer, settings);
-          if( !module.is.active() && module.is.enabled() ) {
-            module.animate.show(callback);
-            $.proxy(settings.onShow, element)();
-            $.proxy(settings.onChange, element)();
-          }
-          else {
-            module.debug('Dimmer is already shown or disabled');
-          }
-        },
-
-        hide: function(callback) {
-          callback = $.isFunction(callback)
-            ? callback
-            : function(){}
-          ;
-          if( module.is.active() || module.is.animating() ) {
-            module.debug('Hiding dimmer', $dimmer);
-            module.animate.hide(callback);
-            $.proxy(settings.onHide, element)();
-            $.proxy(settings.onChange, element)();
-          }
-          else {
-            module.debug('Dimmer is not visible');
-          }
-        },
-
-        toggle: function() {
-          module.verbose('Toggling dimmer visibility', $dimmer);
-          if( !module.is.dimmed() ) {
-            module.show();
-          }
-          else {
-            module.hide();
           }
         },
 
@@ -6796,10 +6839,12 @@ $.fn.dimmer.settings = {
   verbose     : true,
   performance : true,
 
+  dimmerName  : false,
+  variation   : false,
+  closable    : 'auto',
   transition  : 'fade',
   useCSS      : true,
   on          : false,
-  closable    : true,
 
   duration    : {
     show : 500,
@@ -6828,13 +6873,13 @@ $.fn.dimmer.settings = {
 
   className : {
     active     : 'active',
+    animating  : 'animating',
     dimmable   : 'dimmable',
     dimmed     : 'dimmed',
     disabled   : 'disabled',
-    pageDimmer : 'page',
     hide       : 'hide',
-    show       : 'show',
-    transition : 'transition'
+    pageDimmer : 'page',
+    show       : 'show'
   }
 
 };
@@ -7035,6 +7080,63 @@ $.fn.dropdown = function(parameters) {
           $item   = $menu.find(selector.item);
         },
 
+        toggle: function() {
+          module.verbose('Toggling menu visibility');
+          console.log(module.is.active());
+          if( !module.is.active() ) {
+            module.show();
+          }
+          else {
+            module.hide();
+          }
+        },
+
+        show: function() {
+          module.debug('Checking if dropdown can show');
+          if( !module.is.active() ) {
+            module.animate.show(function() {
+              if( module.can.click() ) {
+                module.bind.intent();
+              }
+              module.set.visible();
+            });
+            $.proxy(settings.onShow, element)();
+          }
+        },
+
+        hide: function() {
+          if( module.is.active() ) {
+            module.debug('Hiding dropdown');
+            module.animate.hide(function() {
+              module.remove.filteredItem();
+              module.remove.visible();
+            });
+            $.proxy(settings.onHide, element)();
+          }
+        },
+
+        hideOthers: function() {
+          module.verbose('Finding other dropdowns to hide');
+          $allModules
+            .not($module)
+              .has(selector.menu + ':visible:not(.' + className.animating + ')')
+                .dropdown('hide')
+          ;
+        },
+
+        hideSubMenus: function() {
+          var
+            $subMenus = $menu.find(selector.menu),
+            $activeSubMenu = $subMenus.has(selector.item + '.' + className.active)
+          ;
+          console.log($subMenus.not($activeSubMenu));
+          $subMenus
+            .not($activeSubMenu)
+              .removeClass(className.visible)
+              .removeAttr('style')
+          ;
+        },
+
         bind: {
           keyboardEvents: function() {
             module.debug('Binding keyboard events');
@@ -7049,7 +7151,7 @@ $.fn.dropdown = function(parameters) {
             if( module.is.searchSelection() ) {
               $module
                 .on('focus' + eventNamespace, selector.search, module.event.searchFocus)
-                .on('blur' + eventNamespace, selector.search, module.event.blur)
+                .on('blur' + eventNamespace, selector.search, module.event.searchBlur)
               ;
             }
             else {
@@ -7161,10 +7263,8 @@ $.fn.dropdown = function(parameters) {
             })
           ;
           $filteredItems = $item.not($results);
-          $item
-            .removeClass(className.filtered)
-            .removeClass(className.selected)
-          ;
+          module.remove.filteredItem();
+          module.remove.selectedItem();
           $filteredItems
             .addClass(className.filtered)
           ;
@@ -7176,7 +7276,7 @@ $.fn.dropdown = function(parameters) {
         },
 
         event: {
-          // prevents focus from occuring on mousedown
+          // prevents focus callback from occuring on mousedown
           mousedown: function() {
             activated = true;
           },
@@ -7188,14 +7288,17 @@ $.fn.dropdown = function(parameters) {
               module.show();
             }
           },
-          searchFocus: function() {
-            activated = true;
-            module.show();
-          },
           blur: function(event) {
             if(!activated) {
               module.hide();
             }
+          },
+          searchFocus: function() {
+            activated = true;
+            module.show();
+          },
+          searchBlur: function(event) {
+            module.hide();
           },
           input: function(event) {
             var
@@ -7696,10 +7799,8 @@ $.fn.dropdown = function(parameters) {
                   ? $selectedItem.html()
                   : $selectedItem.text()
               ;
-              $item
-                .removeClass(className.active)
-                .removeClass(className.selected)
-              ;
+              module.remove.activeItem();
+              module.remove.selectedItem();
               $selectedItem
                 .addClass(className.active)
                 .addClass(className.selected)
@@ -7715,6 +7816,15 @@ $.fn.dropdown = function(parameters) {
           },
           visible: function() {
             $module.removeClass(className.visible);
+          },
+          activeItem: function() {
+            $item.removeClass(className.active);
+          },
+          filteredItem: function() {
+            $item.removeClass(className.filtered);
+          },
+          selectedItem: function() {
+            $item.removeClass(className.selected);
           }
         },
 
@@ -7736,6 +7846,9 @@ $.fn.dropdown = function(parameters) {
               ? $subMenu.is(':animated') || $subMenu.transition && $subMenu.transition('is animating')
               : $menu.is(':animated') || $menu.transition && $menu.transition('is animating')
             ;
+          },
+          active: function() {
+            return $module.hasClass(className.active);
           },
           visible: function($subMenu) {
             return ($subMenu)
@@ -7763,20 +7876,29 @@ $.fn.dropdown = function(parameters) {
         animate: {
           show: function(callback, $subMenu) {
             var
-              $currentMenu = $subMenu || $menu
+              $currentMenu = $subMenu || $menu,
+              start = ($subMenu)
+                ? function() {}
+                : function() {
+                  module.hideOthers();
+                  module.set.active();
+                  module.set.scrollPosition();
+                }
             ;
             callback = callback || function(){};
+            module.verbose('Doing menu show animation', $currentMenu);
             if( module.is.hidden($currentMenu) ) {
-              module.verbose('Doing menu show animation', $currentMenu);
               if(settings.transition == 'none') {
                 $.proxy(callback, element)();
               }
               else if($.fn.transition !== undefined && $module.transition('is supported')) {
+                console.log('showing menu');
                 $currentMenu
                   .transition({
                     animation : settings.transition + ' in',
                     duration  : settings.duration,
                     queue     : true,
+                    start     : start,
                     complete  : function() {
                       $.proxy(callback, element)();
                     }
@@ -7784,6 +7906,7 @@ $.fn.dropdown = function(parameters) {
                 ;
               }
               else if(settings.transition == 'slide down') {
+                start();
                 $currentMenu
                   .hide()
                   .clearQueue()
@@ -7802,6 +7925,7 @@ $.fn.dropdown = function(parameters) {
                 ;
               }
               else if(settings.transition == 'fade') {
+                start();
                 $currentMenu
                   .hide()
                   .clearQueue()
@@ -7818,7 +7942,16 @@ $.fn.dropdown = function(parameters) {
           },
           hide: function(callback, $subMenu) {
             var
-              $currentMenu = $subMenu || $menu
+              $currentMenu = $subMenu || $menu,
+              start = ($subMenu)
+                ? function() {}
+                : function() {
+                  if( module.can.click() ) {
+                    module.unbind.intent();
+                  }
+                  module.hideSubMenus();
+                  module.remove.active();
+                }
             ;
             callback = callback || function(){};
             if( module.is.visible($currentMenu) ) {
@@ -7833,6 +7966,7 @@ $.fn.dropdown = function(parameters) {
                     animation : settings.transition + ' out',
                     duration  : settings.duration,
                     queue     : true,
+                    start     : start,
                     complete  : function() {
                       $.proxy(callback, element)();
                     }
@@ -7840,6 +7974,7 @@ $.fn.dropdown = function(parameters) {
                 ;
               }
               else if(settings.transition == 'slide down') {
+                start();
                 $currentMenu
                   .show()
                   .clearQueue()
@@ -7858,6 +7993,7 @@ $.fn.dropdown = function(parameters) {
                 ;
               }
               else if(settings.transition == 'fade') {
+                start();
                 $currentMenu
                   .show()
                   .clearQueue()
@@ -7874,39 +8010,6 @@ $.fn.dropdown = function(parameters) {
           }
         },
 
-        show: function() {
-          module.debug('Checking if dropdown can show');
-          if( module.is.hidden() ) {
-            module.hideOthers();
-            module.set.active();
-            module.set.scrollPosition();
-            module.animate.show(function() {
-              if( module.can.click() ) {
-                module.bind.intent();
-              }
-              module.set.visible();
-            });
-            $.proxy(settings.onShow, element)();
-          }
-        },
-
-        hide: function() {
-          if( !module.is.animated() && module.is.visible() ) {
-            module.debug('Hiding dropdown');
-            if( module.can.click() ) {
-              module.unbind.intent();
-            }
-            module.remove.active();
-            module.animate.hide(function() {
-              $item
-                .removeClass(className.filtered)
-              ;
-              module.remove.visible();
-            });
-            $.proxy(settings.onHide, element)();
-          }
-        },
-
         delay: {
           show: function() {
             module.verbose('Delaying show event to ensure user intent');
@@ -7917,25 +8020,6 @@ $.fn.dropdown = function(parameters) {
             module.verbose('Delaying hide event to ensure user intent');
             clearTimeout(module.timer);
             module.timer = setTimeout(module.hide, settings.delay.hide);
-          }
-        },
-
-        hideOthers: function() {
-          module.verbose('Finding other dropdowns to hide');
-          $allModules
-            .not($module)
-              .has(selector.menu + ':visible')
-              .dropdown('hide')
-          ;
-        },
-
-        toggle: function() {
-          module.verbose('Toggling menu visibility');
-          if( module.is.hidden() ) {
-            module.show();
-          }
-          else {
-            module.hide();
           }
         },
 
@@ -8118,15 +8202,7 @@ $.fn.dropdown = function(parameters) {
 
 $.fn.dropdown.settings = {
 
-  name           : 'Dropdown',
-  namespace      : 'dropdown',
-
-  debug          : false,
-  verbose        : true,
-  performance    : true,
-
-  type           : false,
-
+  /* Behavior */
   on             : 'click',
   action         : 'activate',
 
@@ -8143,9 +8219,18 @@ $.fn.dropdown.settings = {
   transition : 'slide down',
   duration   : 250,
 
+  /* Callbacks */
   onChange   : function(value, text){},
   onShow     : function(){},
   onHide     : function(){},
+
+  /* Component */
+  name           : 'Dropdown',
+  namespace      : 'dropdown',
+
+  debug          : false,
+  verbose        : true,
+  performance    : true,
 
   error   : {
     action     : 'You called a dropdown action that was not defined',
@@ -8171,6 +8256,7 @@ $.fn.dropdown.settings = {
 
   className : {
     active      : 'active',
+    animating   : 'animating',
     disabled    : 'disabled',
     dropdown    : 'ui dropdown',
     filtered    : 'filtered',
@@ -8184,6 +8270,7 @@ $.fn.dropdown.settings = {
 
 };
 
+/* Templates */
 $.fn.dropdown.settings.templates = {
   menu: function(select) {
     var
@@ -8228,7 +8315,8 @@ $.fn.dropdown.settings.templates = {
   }
 };
 
-// Adds easing
+
+/* Dependencies */
 $.extend( $.easing, {
   easeOutQuad: function (x, t, b, c, d) {
     return -c *(t/=d)*(t-2) + b;
@@ -8317,10 +8405,11 @@ $.fn.modal = function(parameters) {
           }
           $dimmable = $context
             .dimmer({
-              debug    : settings.debug,
-              closable : false,
-              useCSS   : true,
-              duration : {
+              debug      : settings.debug,
+              dimmerName : 'modals',
+              closable   : false,
+              useCSS     : true,
+              duration   : {
                 show     : settings.duration * 0.9,
                 hide     : settings.duration * 1.1
               }
@@ -8484,10 +8573,6 @@ $.fn.modal = function(parameters) {
             : function(){}
           ;
           if( !module.is.active() ) {
-            module.cacheSizes();
-            module.set.position();
-            module.set.screenHeight();
-            module.set.type();
 
             if( $otherModals.filter(':visible').size() > 0 && !settings.allowMultiple) {
               module.debug('Other modals visible, queueing show animation');
@@ -8501,10 +8586,21 @@ $.fn.modal = function(parameters) {
                   .transition({
                     debug     : settings.debug,
                     animation : settings.transition + ' in',
+                    queue     : false,
                     duration  : settings.duration,
+                    start     : function() {
+                      module.cacheSizes();
+                      module.set.position();
+                      module.set.screenHeight();
+                      module.set.type();
+                      module.set.clickaway();
+                    },
                     complete  : function() {
                       $.proxy(settings.onVisible, element)();
+                      module.add.keyboardShortcuts();
+                      module.save.focus();
                       module.set.active();
+                      module.set.autofocus();
                       callback();
                     }
                   })
@@ -8515,6 +8611,8 @@ $.fn.modal = function(parameters) {
                 $module
                   .fadeIn(settings.duration, settings.easing, function() {
                     $.proxy(settings.onVisible, element)();
+                    module.add.keyboardShortcuts();
+                    module.save.focus();
                     module.set.active();
                     callback();
                   })
@@ -8554,11 +8652,7 @@ $.fn.modal = function(parameters) {
             return;
           }
           module.debug('Hiding dimmer');
-          if(settings.closable) {
-            $dimmer
-              .off('click' + eventNamespace)
-            ;
-          }
+          module.remove.clickaway();
           $dimmable.dimmer('hide', function() {
             if(settings.transition && $.fn.transition !== undefined && $module.transition('is supported')) {
               module.remove.screenHeight();
@@ -8572,19 +8666,18 @@ $.fn.modal = function(parameters) {
             ? callback
             : function(){}
           ;
-          if( !(module.is.active() || module.is.animating()) ) {
-            module.debug('Cannot hide modal it is not active');
-            return;
-          }
           module.debug('Hiding modal');
-          module.remove.keyboardShortcuts();
           $.proxy(settings.onHide, element)();
           if(settings.transition && $.fn.transition !== undefined && $module.transition('is supported')) {
             $module
               .transition({
                 debug     : settings.debug,
                 animation : settings.transition + ' out',
+                queue     : false,
                 duration  : settings.duration,
+                start     : function() {
+                  module.remove.keyboardShortcuts();
+                },
                 complete  : function() {
                   $.proxy(settings.onHidden, element)();
                   module.remove.active();
@@ -8595,6 +8688,7 @@ $.fn.modal = function(parameters) {
             ;
           }
           else {
+            module.remove.keyboardShortcuts();
             $module
               .fadeOut(settings.duration, settings.easing, function() {
                 $.proxy(settings.onHidden, element)();
@@ -8627,7 +8721,7 @@ $.fn.modal = function(parameters) {
             : function(){}
           ;
           if( $otherModals.is(':visible') ) {
-            module.debug('Hiding other modals');
+            module.debug('Hiding other modals', $otherModals);
             $otherModals
               .filter(':visible')
                 .modal('hide modal', callback)
@@ -8661,6 +8755,13 @@ $.fn.modal = function(parameters) {
         remove: {
           active: function() {
             $module.removeClass(className.active);
+          },
+          clickaway: function() {
+            if(settings.closable) {
+              $dimmer
+                .off('click' + eventNamespace)
+              ;
+            }
           },
           screenHeight: function() {
             if(module.cache.height > module.cache.pageHeight) {
@@ -8721,26 +8822,7 @@ $.fn.modal = function(parameters) {
         },
 
         set: {
-          screenHeight: function() {
-            if(module.cache.height > module.cache.pageHeight) {
-              module.debug('Modal is taller than page content, resizing page height');
-              $body
-                .css('height', module.cache.height + settings.padding)
-              ;
-            }
-          },
-          active: function() {
-            module.add.keyboardShortcuts();
-            module.save.focus();
-            $module
-              .addClass(className.active)
-            ;
-            if(settings.closable) {
-              $dimmer
-                .off('click' + eventNamespace)
-                .on('click' + eventNamespace, module.event.click)
-              ;
-            }
+          autofocus: function() {
             if(settings.autofocus) {
               var
                 $inputs    = $module.find(':input:visible'),
@@ -8751,6 +8833,25 @@ $.fn.modal = function(parameters) {
               ;
               $input.first().focus();
             }
+          },
+          clickaway: function() {
+            if(settings.closable) {
+              $dimmer
+                .off('click' + eventNamespace)
+                .on('click' + eventNamespace, module.event.click)
+              ;
+            }
+          },
+          screenHeight: function() {
+            if(module.cache.height > module.cache.pageHeight) {
+              module.debug('Modal is taller than page content, resizing page height');
+              $body
+                .css('height', module.cache.height + settings.padding)
+              ;
+            }
+          },
+          active: function() {
+            $module.addClass(className.active);
           },
           scrolling: function() {
             $dimmable.addClass(className.scrolling);
@@ -9820,14 +9921,17 @@ $.fn.popup = function(parameters) {
         animate: {
           show: function(callback) {
             callback = callback || function(){};
-            $module
-              .addClass(className.visible)
-            ;
             if(settings.transition && $.fn.transition !== undefined && $module.transition('is supported')) {
               $popup
                 .transition({
                   animation : settings.transition + ' in',
+                  queue     : false,
                   duration  : settings.duration,
+                  start: function() {
+                    $module
+                      .addClass(className.visible)
+                    ;
+                  },
                   complete  : function() {
                     module.bind.close();
                     $.proxy(callback, element)();
@@ -9836,6 +9940,9 @@ $.fn.popup = function(parameters) {
               ;
             }
             else {
+              $module
+                .addClass(className.visible)
+              ;
               $popup
                 .stop()
                 .fadeIn(settings.duration, settings.easing, function() {
@@ -9853,6 +9960,7 @@ $.fn.popup = function(parameters) {
               $popup
                 .transition({
                   animation : settings.transition + ' out',
+                  queue     : false,
                   duration  : settings.duration,
                   complete  : function() {
                     module.reset();
@@ -10386,7 +10494,7 @@ $.fn.popup.settings = {
   context        : 'body',
   position       : 'top left',
   delay          : {
-    show : 50,
+    show : 30,
     hide : 0
   },
 
@@ -15777,14 +15885,19 @@ $.fn.transition = function() {
             return false;
           }
           module.debug('Preparing animation', settings.animation);
-          if(module.is.animating() && settings.queue) {
-            if(!settings.allowRepeats && module.has.direction() && module.is.occuring() && module.queuing !== true) {
-              module.error(error.repeated);
+          if(module.is.animating()) {
+            if(settings.queue) {
+              if(!settings.allowRepeats && module.has.direction() && module.is.occuring() && module.queuing !== true) {
+                module.error(error.repeated, settings.animation, $module);
+              }
+              else {
+                module.queue(settings.animation);
+              }
+              return false;
             }
             else {
-              module.queue(settings.animation);
+
             }
-            return false;
           }
           if(module.can.animate) {
             module.set.animating(settings.animation);
@@ -15854,7 +15967,11 @@ $.fn.transition = function() {
         set: {
           animating: function(animation) {
             animation = animation || settings.animation;
-            module.save.conditions();
+            if(!module.is.animating()) {
+              module.save.conditions();
+            }
+            module.remove.direction();
+            $module.off('.complete');
             if(module.can.transition() && !module.has.direction()) {
               module.set.direction();
             }
@@ -15864,9 +15981,10 @@ $.fn.transition = function() {
               .addClass(className.animating)
               .addClass(className.transition)
               .addClass(animation)
-              .one(animationEnd + eventNamespace, module.complete)
+              .one(animationEnd + '.complete' + eventNamespace, module.complete)
             ;
             module.set.duration(settings.duration);
+            $.proxy(settings.start, this)();
             module.debug('Starting tween', animation, $module.attr('class'));
           },
           display: function() {
@@ -15956,6 +16074,8 @@ $.fn.transition = function() {
               clasName = $module.attr('class') || false,
               style = $module.attr('style') || ''
             ;
+            $module.removeClass(settings.animation);
+            module.remove.direction();
             module.cache = {
               className : $module.attr('class'),
               style     : module.get.style()
@@ -15994,6 +16114,12 @@ $.fn.transition = function() {
             if(module.displayType !== undefined) {
               $module.css('display', '');
             }
+          },
+          direction: function() {
+            $module
+              .removeClass(className.inward)
+              .removeClass(className.outward)
+            ;
           },
           duration: function() {
             $module
@@ -16201,7 +16327,8 @@ $.fn.transition = function() {
           },
           occuring: function(animation) {
             animation = animation || settings.animation;
-            return ( $module.hasClass(animation) );
+            animation = animation.replace(' ', '.');
+            return ( $module.filter(animation).size() > 0 );
           },
           visible: function() {
             return $module.is(':visible');
@@ -16435,6 +16562,7 @@ $.fn.transition.settings = {
   namespace   : 'transition',
 
   // animation complete event
+  start       : function() {},
   complete    : function() {},
   onShow      : function() {},
   onHide      : function() {},

@@ -94,8 +94,10 @@
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -117,7 +119,6 @@
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -168,7 +169,7 @@
            Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
            Breadcrumb
@@ -358,8 +359,10 @@
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -381,7 +384,6 @@
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -465,7 +467,7 @@
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             Elements
@@ -526,6 +528,7 @@
 .ui.form input[type="tel"],
 .ui.form .ui.input {
   width: 100%;
+  vertical-align: top;
 }
 .ui.form input[type="text"],
 .ui.form input[type="email"],
@@ -692,17 +695,17 @@
 .ui.form input[type="url"]:focus,
 .ui.form input[type="tel"]:focus {
   color: rgba(0, 0, 0, 0.85);
-  border-color: rgba(39, 41, 43, 0.3);
+  border-color: rgba(39, 41, 43, 0.2);
   border-radius: 0em 0.2857rem 0.2857rem 0em;
   background: #ffffff;
-  box-shadow: 1px 0em 0em 0em rgba(39, 41, 43, 0.3) inset;
+  box-shadow: 1px 0em 0em 0em rgba(39, 41, 43, 0.2) inset;
 }
 .ui.form textarea:focus {
   color: rgba(0, 0, 0, 0.85);
-  border-color: rgba(39, 41, 43, 0.3);
+  border-color: rgba(39, 41, 43, 0.2);
   border-radius: 0em 0.2857rem 0.2857rem 0em;
   background: #ffffff;
-  box-shadow: 1px 0em 0em 0em rgba(39, 41, 43, 0.3) inset;
+  box-shadow: 1px 0em 0em 0em rgba(39, 41, 43, 0.2) inset;
   -webkit-appearance: none;
 }
 /*--------------------
@@ -754,7 +757,7 @@
 .ui.form .field.error input[type="number"],
 .ui.form .field.error input[type="url"],
 .ui.form .field.error input[type="tel"] {
-  background: #fae8e8;
+  background: #fff0f0;
   border-color: #dbb1b1;
   color: #d95c5c;
   border-radius: 0em 0.2857rem 0.2857rem 0em;
@@ -768,7 +771,7 @@
 .ui.form .field.error input[type="number"]:focus,
 .ui.form .field.error input[type="url"]:focus,
 .ui.form .field.error input[type="tel"]:focus {
-  background: #fae8e8;
+  background: #fff0f0;
   border-color: #dbb1b1;
   color: #dc6868;
   -webkit-appearance: none;
@@ -782,7 +785,7 @@
 .ui.form .field.error .ui.dropdown,
 .ui.form .field.error .ui.dropdown .text,
 .ui.form .field.error .ui.dropdown .item {
-  background: #fae8e8;
+  background: #fff0f0;
   color: #d95c5c;
 }
 .ui.form .fields.error .field .ui.dropdown,
@@ -820,7 +823,7 @@
 .ui.form .field.error .checkbox:not(.toggle):not(.slider) label:before,
 .ui.form .fields.error .field .checkbox:not(.toggle):not(.slider) .box:before,
 .ui.form .field.error .checkbox:not(.toggle):not(.slider) .box:before {
-  background: #fae8e8;
+  background: #fff0f0;
   border-color: #dbb1b1;
 }
 .ui.form .fields.error .field .checkbox label:after,
@@ -1240,8 +1243,10 @@
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -1263,7 +1268,6 @@
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -1329,7 +1333,7 @@
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             Standard
@@ -2117,6 +2121,14 @@
   width: -webkit-calc(100% +  2rem );
   width: calc(100% +  2rem );
 }
+.ui[class*="equal height"].relaxed.grid {
+  width: -webkit-calc(100% +  3rem );
+  width: calc(100% +  3rem );
+}
+.ui[class*="equal height"][class*="very relaxed"].grid {
+  width: -webkit-calc(100% +  5rem );
+  width: calc(100% +  5rem );
+}
 .ui[class*="equal height"].grid > .row,
 .ui[class*="equal height"].row {
   display: table;
@@ -2294,9 +2306,13 @@
 @media only screen and (max-width: 767px) {
   .ui.stackable.grid {
     display: block !important;
-    width: 100%;
+    width: auto;
     padding: 0em;
-    margin: 0em !important;
+    margin-top: 0em;
+    margin-bottom: 0em;
+  }
+  :not(.column) > .ui.stackable.grid {
+    margin: 0em;
   }
   .ui.stackable.grid > .row > .wide.column,
   .ui.stackable.grid > .wide.column,
@@ -2306,8 +2322,8 @@
   .ui.stackable.grid > .column {
     display: block !important;
     width: auto !important;
-    margin: 1rem 0em 0em !important;
-    padding: 1rem 1rem 0em !important;
+    margin: 0.5rem 0em !important;
+    padding: 0.5rem 1rem 0em !important;
     box-shadow: none !important;
   }
   .ui.stackable.celled.grid > .column,
@@ -2315,6 +2331,9 @@
   .ui.stackable.divided.grid > .column,
   .ui.stackable.divided.grid > .row > .column {
     border-top: 1px solid rgba(39, 41, 43, 0.15);
+    box-shadow: none !important;
+    margin: 2rem 0em !important;
+    padding: 2rem 1rem 0em !important;
   }
   .ui.inverted.stackable.celled.grid > .column,
   .ui.inverted.stackable.celled.grid > .row > .column,
@@ -2494,8 +2513,10 @@
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -2517,7 +2538,6 @@
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -2607,7 +2627,7 @@
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             Standard
@@ -3128,7 +3148,7 @@
 ---------------*/
 .ui.tabular.menu {
   background-color: transparent;
-  border-bottom: 1px solid #dcddde;
+  border-bottom: 1px solid #d4d4d5;
   border-radius: 0em;
   box-shadow: none !important;
 }
@@ -3154,7 +3174,7 @@
   position: relative;
   background-color: #ffffff;
   color: rgba(0, 0, 0, 0.8);
-  border-color: #dcddde;
+  border-color: #d4d4d5;
   font-weight: bold;
   margin-bottom: -1px;
   border-bottom: 1px solid #ffffff;
@@ -3167,7 +3187,7 @@
   z-index: 2;
 }
 .ui.tabular.menu ~ .bottom.attached.segment {
-  margin: 0px 0px 0px 1px;
+  margin: -1px 0px 0px;
 }
 /*--------------
    Pagination
@@ -4095,8 +4115,10 @@
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -4118,7 +4140,6 @@
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -4175,7 +4196,7 @@
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             Message
@@ -4190,8 +4211,8 @@
   color: rgba(0, 0, 0, 0.8);
   -webkit-transition: opacity 0.2s ease, color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
           transition: opacity 0.2s ease, color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-  border-radius: 0.25em;
-  box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.15) inset, 0px 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 0.2857rem;
+  box-shadow: 0px 0px 0px 1px rgba(39, 41, 43, 0.15) inset, 0px 0px 0px 0px transparent;
 }
 .ui.message:first-child {
   margin-top: 0em;
@@ -4308,7 +4329,7 @@
 ---------------*/
 .ui.attached.message {
   margin-bottom: -1px;
-  border-radius: 0.25em 0.25em 0em 0em;
+  border-radius: 0.2857rem 0.2857rem 0em 0em;
   box-shadow: 0em 0em 0em 1px rgba(0, 0, 0, 0.1) inset;
   margin-left: -1px;
   margin-right: -1px;
@@ -4319,7 +4340,7 @@
 }
 .ui.bottom.attached.message {
   margin-top: -1px;
-  border-radius: 0em 0em 0.25em 0.25em;
+  border-radius: 0em 0em 0.2857rem 0.2857rem;
   box-shadow: 0em 0em 0em 1px rgba(0, 0, 0, 0.1) inset, 0px 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 .ui.bottom.attached.message:not(:last-child) {
@@ -4338,26 +4359,31 @@
 }
 .ui.icon.message > .icon:not(.close) {
   display: table-cell;
+  width: auto;
   vertical-align: middle;
   font-size: 3em;
   opacity: 0.8;
-  width: 1em;
 }
 .ui.icon.message > .content {
   display: table-cell;
+  width: 100%;
   vertical-align: middle;
 }
 .ui.icon.message .icon:not(.close) + .content {
   padding-left: 1.5rem;
 }
+.ui.icon.message .circular.icon {
+  width: 1em;
+}
 .ui.icon.message .circular.icon + .content {
+  width: auto;
   padding-left: 2em;
 }
 /*--------------
     Floating
 ---------------*/
 .ui.floating.message {
-  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.15), 0px 0px 0px 1px rgba(0, 0, 0, 0.15) inset;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.15), 0px 0px 0px 1px rgba(39, 41, 43, 0.15) inset;
 }
 /*--------------
      Colors
@@ -4371,7 +4397,7 @@
 ---------------*/
 /* Positive */
 .ui.positive.message {
-  background-color: #e4f5dd;
+  background-color: #eeffe7;
   color: #3c763d;
 }
 .ui.positive.message,
@@ -4379,11 +4405,11 @@
   box-shadow: 0px 0px 0px 1px #b7caa7 inset, 0px 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 .ui.positive.message .header {
-  color: #336534;
+  color: #356e36;
 }
 /* Negative */
 .ui.negative.message {
-  background-color: #fae8e8;
+  background-color: #fff0f0;
   color: #a94442;
 }
 .ui.negative.message,
@@ -4391,11 +4417,11 @@
   box-shadow: 0px 0px 0px 1px #dbb1b1 inset, 0px 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 .ui.negative.message .header {
-  color: #973d3b;
+  color: #912d2b;
 }
 /* Info */
 .ui.info.message {
-  background-color: #e5f6fb;
+  background-color: #e9faff;
   color: #337b92;
 }
 .ui.info.message,
@@ -4403,23 +4429,23 @@
   box-shadow: 0px 0px 0px 1px #aad6df inset, 0px 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 .ui.info.message .header {
-  color: #2c6b7f;
+  color: #297187;
 }
 /* Warning */
 .ui.warning.message {
-  background-color: #fcf8e3;
-  color: #8a6d3b;
+  background-color: #fffbe6;
+  color: #876a38;
 }
 .ui.warning.message,
 .ui.attached.warning.message {
-  box-shadow: 0px 0px 0px 1px #d3c4a5 inset, 0px 1px 2px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 0px 0px 1px #d9caab inset, 0px 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 .ui.warning.message .header {
-  color: #785f33;
+  color: #825c01;
 }
 /* Error */
 .ui.error.message {
-  background-color: #fae8e8;
+  background-color: #fff0f0;
   color: #a94442;
 }
 .ui.error.message,
@@ -4427,11 +4453,11 @@
   box-shadow: 0px 0px 0px 1px #dbb1b1 inset, 0px 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 .ui.error.message .header {
-  color: #973d3b;
+  color: #912d2b;
 }
 /* Success */
 .ui.success.message {
-  background-color: #e4f5dd;
+  background-color: #eeffe7;
   color: #3c763d;
 }
 .ui.success.message,
@@ -4439,7 +4465,7 @@
   box-shadow: 0px 0px 0px 1px #b7caa7 inset, 0px 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 .ui.success.message .header {
-  color: #336534;
+  color: #356e36;
 }
 /* Colors */
 .ui.inverted.message,
@@ -4448,56 +4474,56 @@
   color: #ffffff;
 }
 .ui.blue.message {
-  background-color: #d3e4f3;
+  background-color: #dff0ff;
   color: #3b83c0;
 }
 .ui.blue.message .header {
   color: #3576ac;
 }
 .ui.green.message {
-  background-color: #def2e0;
+  background-color: #ebffed;
   color: #1ebc30;
 }
 .ui.green.message .header {
   color: #1aa62a;
 }
 .ui.orange.message {
-  background-color: #f7e5d6;
+  background-color: #ffedde;
   color: #e07b53;
 }
 .ui.orange.message .header {
   color: #dc6a3d;
 }
 .ui.pink.message {
-  background-color: #f9cee6;
+  background-color: #ffe3fb;
   color: #d9499a;
 }
 .ui.pink.message .header {
   color: #d5348e;
 }
 .ui.purple.message {
-  background-color: #e0ddf5;
+  background-color: #eae7ff;
   color: #564f8a;
 }
 .ui.purple.message .header {
   color: #4c467a;
 }
 .ui.red.message {
-  background-color: #f8d5d3;
+  background-color: #ffe8e6;
   color: #d95c5c;
 }
 .ui.red.message .header {
   color: #d44747;
 }
 .ui.teal.message {
-  background-color: #d2f5f5;
+  background-color: #e9ffff;
   color: #10a3a3;
 }
 .ui.teal.message .header {
   color: #0e8c8c;
 }
 .ui.yellow.message {
-  background-color: #fcf5d8;
+  background-color: #fff8db;
   color: #b58105;
 }
 .ui.yellow.message .header {
@@ -4624,8 +4650,10 @@
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -4647,7 +4675,6 @@
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -4728,7 +4755,7 @@
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
              Table
@@ -5599,8 +5626,10 @@
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -5622,7 +5651,6 @@
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -5655,9 +5683,10 @@
 /*-------------------
        Element
 --------------------*/
-/* Shadow */
-/* transitions */
-/* Padding */
+/* Style */
+/* Text */
+/* Internal Shadow */
+/* Box Shadow */
 /* Icon */
 /* Loader */
 /*-------------------
@@ -5708,7 +5737,7 @@
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             Button
@@ -5802,29 +5831,71 @@
 /*--------------
     Loading
 ---------------*/
-.ui.loading.button {
+/* Specificity hack */
+.ui.loading.loading.loading.loading.loading.loading.button {
   position: relative;
   cursor: default;
   point-events: none;
-  background: rgba(0, 0, 0, 0.04) !important;
   text-shadow: none !important;
   color: transparent !important;
   -webkit-transition: all 0s linear;
           transition: all 0s linear;
-  box-shadow: 0px 0px 0px 1px transparent inset, 0px 0em 0px 0px rgba(39, 41, 43, 0.15) inset;
+}
+.ui.loading.button:before {
+  position: absolute;
+  content: '';
+  top: 50%;
+  left: 50%;
+  margin: -0.64285em 0em 0em -0.64285em;
+  width: 1.2857em;
+  height: 1.2857em;
+  border-radius: 500rem;
+  border: 3px solid rgba(0, 0, 0, 0.15);
 }
 .ui.loading.button:after {
   position: absolute;
-  top: 0em;
-  left: 0em;
-  width: 100%;
-  height: 100%;
   content: '';
-  background: transparent url("../../themes/packages/default/assets/images/loader-mini.gif") no-repeat 50% 50%;
+  top: 50%;
+  left: 50%;
+  margin: -0.64285em 0em 0em -0.64285em;
+  width: 1.2857em;
+  height: 1.2857em;
+  -webkit-animation: button-spin 0.75s linear;
+          animation: button-spin 0.75s linear;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  border-radius: 500rem;
+  border-color: rgba(255, 255, 255, 0.8) transparent transparent;
+  border-style: solid;
+  border-width: 3px;
+  box-shadow: 0px 0px 0px 1px transparent;
 }
 .ui.labeled.icon.loading.button .icon {
   background-color: transparent;
   box-shadow: none;
+}
+@-webkit-keyframes button-spin {
+  from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+@keyframes button-spin {
+  from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+.ui.basic.loading.button:not(.inverted):after {
+  border-color: #aaaaaa transparent transparent;
 }
 /*-------------------
       Disabled
@@ -6212,21 +6283,6 @@
 .ui.massive.button {
   font-size: 1.7142em;
 }
-/* Loading Resize */
-.ui.huge.loading.button:after,
-.ui.huge.loading.button.active:after {
-  background-image: url("../../themes/packages/default/assets/images/loader-small.gif");
-}
-.ui.massive.buttons .loading.button:after,
-.ui.gigantic.buttons .loading.button:after,
-.ui.massive.loading.button:after,
-.ui.gigantic.loading.button:after,
-.ui.massive.buttons .loading.button.active:after,
-.ui.gigantic.buttons .loading.button.active:after,
-.ui.massive.loading.button.active:after,
-.ui.gigantic.loading.button.active:after {
-  background-image: url("../../themes/packages/default/assets/images/loader-medium.gif");
-}
 /*--------------
     Icon Only
 ---------------*/
@@ -6276,8 +6332,9 @@
 .ui.basic.buttons .button.active,
 .ui.basic.button.active {
   background: rgba(0, 0, 0, 0.05) !important;
+  box-shadow: '' !important;
   color: rgba(0, 0, 0, 0.8);
-  box-shadow: rgba(39, 41, 43, 0.3);
+  box-shadow: rgba(39, 41, 43, 0.2);
 }
 .ui.basic.buttons .button.active:hover,
 .ui.basic.button.active:hover {
@@ -6291,7 +6348,7 @@
   box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.15) inset, 0px 1px 4px 0px rgba(39, 41, 43, 0.15) inset inset;
 }
 .ui.basic.buttons .button.active {
-  box-shadow: rgba(39, 41, 43, 0.3) inset;
+  box-shadow: rgba(39, 41, 43, 0.2) inset;
 }
 /* Standard Basic Inverted */
 .ui.basic.inverted.buttons .button,
@@ -6322,11 +6379,6 @@
 .ui.basic.inverted.button.active:hover {
   background-color: rgba(255, 255, 255, 0.07);
   box-shadow: 0px 0px 0px 2px #ffffff inset !important;
-}
-/* Loading */
-.ui.basic.loading.button:after {
-  background-color: #fafafa;
-  border-radius: 0.2857rem;
 }
 /* Basic Group */
 .ui.basic.buttons .button {
@@ -7995,8 +8047,10 @@
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -8018,7 +8072,6 @@
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -8076,7 +8129,7 @@
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             Divider
@@ -8371,8 +8424,10 @@
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -8394,7 +8449,6 @@
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -8440,7 +8494,7 @@
    Flag Variables
 --------------------*/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 i.flag:not(.icon) {
   display: inline-block;
@@ -9539,8 +9593,10 @@ i.flag.zimbabwe:before {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -9562,7 +9618,6 @@ i.flag.zimbabwe:before {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -9626,7 +9681,7 @@ i.flag.zimbabwe:before {
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             Header
@@ -10194,8 +10249,10 @@ a.ui.inverted.yellow.header:hover {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -10217,7 +10274,6 @@ a.ui.inverted.yellow.header:hover {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -10263,7 +10319,7 @@ a.ui.inverted.yellow.header:hover {
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
              Icon
@@ -12416,8 +12472,10 @@ i.icon.weixin:before {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -12439,7 +12497,6 @@ i.icon.weixin:before {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -12495,7 +12552,7 @@ i.icon.weixin:before {
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
              Image
@@ -12575,6 +12632,10 @@ img.ui.bordered.image {
 /*--------------
     Circular
 ---------------*/
+.ui.circular.images,
+.ui.circular.image {
+  overflow: hidden;
+}
 .ui.circular.images .image,
 .ui.circular.images img,
 .ui.circular.image img,
@@ -12795,8 +12856,10 @@ img.ui.bordered.image {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -12818,7 +12881,6 @@ img.ui.bordered.image {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -12882,7 +12944,7 @@ img.ui.bordered.image {
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
            Standard
@@ -12951,7 +13013,7 @@ img.ui.bordered.image {
 ---------------------*/
 .ui.input.focus input,
 .ui.input input:focus {
-  border-color: rgba(39, 41, 43, 0.3);
+  border-color: rgba(39, 41, 43, 0.2);
   background: '';
   color: rgba(0, 0, 0, 0.8);
   box-shadow: none;
@@ -13320,8 +13382,10 @@ img.ui.bordered.image {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -13343,7 +13407,6 @@ img.ui.bordered.image {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -13417,7 +13480,7 @@ img.ui.bordered.image {
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             Label
@@ -13434,7 +13497,7 @@ img.ui.bordered.image {
   color: rgba(0, 0, 0, 0.6);
   text-transform: none;
   font-weight: bold;
-  border-radius: 0.325em;
+  border-radius: 0.2857rem;
   box-sizing: border-box;
   -webkit-transition: background 0.1s linear
   ;
@@ -13522,7 +13585,7 @@ a.ui.label {
   text-transform: none;
   background: #e8e8e8;
   padding: 0.6em 0.8em 0.6em 0.5em;
-  border-radius: 0.325em;
+  border-radius: 0.2857rem;
   box-shadow: none;
 }
 .ui.image.label img {
@@ -13530,13 +13593,13 @@ a.ui.label {
   vertical-align: top;
   height: 2.2em;
   margin: -0.6em 0.5em -0.6em -0.5em;
-  border-radius: 0.325em;
+  border-radius: 0.2857rem;
 }
 .ui.image.label .detail {
   background: rgba(0, 0, 0, 0.1);
   margin: -0.6em -0.8em -0.6em 0.5em;
   padding: 0.6em 0.8em;
-  border-radius: 0em 0.325em 0.325em 0em;
+  border-radius: 0em 0.2857rem 0.2857rem 0em;
 }
 /*-------------------
          Tag
@@ -13547,7 +13610,7 @@ a.ui.label {
   position: relative;
   padding-left: 1.5em;
   padding-right: 1.5em;
-  border-radius: 0em 0.325em 0.325em 0em;
+  border-radius: 0em 0.2857rem 0.2857rem 0em;
 }
 .ui.tag.labels .label:before,
 .ui.tag.label:before {
@@ -13708,7 +13771,7 @@ a.ui.label {
   margin: 0em;
   left: -2rem;
   padding-left: 2rem;
-  border-radius: 0em 0.325em 0.325em 0em;
+  border-radius: 0em 0.2857rem 0.2857rem 0em;
   border-color: rgba(0, 0, 0, 0.15);
 }
 .ui.ribbon.label:after {
@@ -13737,29 +13800,29 @@ a.ui.label {
   top: 0em;
   left: 0em;
   padding: 0.75em 1em;
-  border-radius: 0.325em 0.325em 0em 0em;
+  border-radius: 0.2857rem 0.2857rem 0em 0em;
 }
 .ui.bottom.attached.label {
   top: auto;
   bottom: 0em;
-  border-radius: 0em 0em 0.325em 0.325em;
+  border-radius: 0em 0em 0.2857rem 0.2857rem;
 }
 .ui.top.left.attached.label {
   width: auto;
   margin-top: 0em !important;
-  border-radius: 0.325em 0em 0.325em 0em;
+  border-radius: 0.2857rem 0em 0.2857rem 0em;
 }
 .ui.top.right.attached.label {
   width: auto;
   left: auto;
   right: 0em;
-  border-radius: 0em 0.325em 0em 0.325em;
+  border-radius: 0em 0.2857rem 0em 0.2857rem;
 }
 .ui.bottom.left.attached.label {
   width: auto;
   top: auto;
   bottom: 0em;
-  border-radius: 0em 0em 0.325em 0.325em;
+  border-radius: 0em 0em 0.2857rem 0.2857rem;
 }
 .ui.bottom.right.attached.label {
   top: auto;
@@ -13767,7 +13830,7 @@ a.ui.label {
   left: auto;
   right: 0em;
   width: auto;
-  border-radius: 0.325em 0em 0.325em 0em;
+  border-radius: 0.2857rem 0em 0.2857rem 0em;
 }
 /*******************************
              States
@@ -14359,8 +14422,10 @@ a.ui.yellow.label:hover:before {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -14382,7 +14447,6 @@ a.ui.yellow.label:hover:before {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -14467,7 +14531,7 @@ a.ui.yellow.label:hover:before {
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             List
@@ -15220,8 +15284,10 @@ ol.ui.horizontal.list li:before,
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -15243,7 +15309,6 @@ ol.ui.horizontal.list li:before,
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -15300,7 +15365,7 @@ ol.ui.horizontal.list li:before,
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             Loader
@@ -15634,8 +15699,10 @@ ol.ui.horizontal.list li:before,
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -15657,7 +15724,6 @@ ol.ui.horizontal.list li:before,
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -15708,7 +15774,7 @@ ol.ui.horizontal.list li:before,
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
              Rails
@@ -15876,8 +15942,10 @@ ol.ui.horizontal.list li:before,
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -15899,7 +15967,6 @@ ol.ui.horizontal.list li:before,
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -15942,7 +16009,7 @@ ol.ui.horizontal.list li:before,
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             Reveal
@@ -16279,8 +16346,10 @@ ol.ui.horizontal.list li:before,
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -16302,7 +16371,6 @@ ol.ui.horizontal.list li:before,
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -16362,7 +16430,7 @@ ol.ui.horizontal.list li:before,
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             Segment
@@ -16534,7 +16602,7 @@ ol.ui.horizontal.list li:before,
 .ui.stacked.inverted.segment:after,
 .ui.stacked.inverted.segment:before {
   background-color: rgba(0, 0, 0, 0.03);
-  border-top: 1px solid rgba(39, 41, 43, 0.3);
+  border-top: 1px solid rgba(39, 41, 43, 0.2);
 }
 /*-------------------
        Compact
@@ -16743,6 +16811,10 @@ ol.ui.horizontal.list li:before,
   top: 0px;
   bottom: 0px;
   margin: 0em -1px;
+  width: -webkit-calc(100% +  2px );
+  width: calc(100% +  2px );
+  max-width: -webkit-calc(100% +  2px );
+  max-width: calc(100% +  2px );
   border-radius: 0px;
   box-shadow: none;
   border: 1px solid #d4d4d5;
@@ -16828,6 +16900,31 @@ ol.ui.horizontal.list li:before,
      Load Default
 -------------------*/
 /*******************************
+             Step
+*******************************/
+/*-------------------
+      Element
+--------------------*/
+/* Icon */
+/* Title */
+/* Description */
+/* Arrow */
+/*-------------------
+       Group
+--------------------*/
+/*-------------------
+       States
+--------------------*/
+/* Completed */
+/* Hover */
+/* Down */
+/* Active */
+/* Active + Hover */
+/* Disabled */
+/*------------------
+     Load Theme
+-------------------*/
+/*******************************
          Site Settings
 *******************************/
 /*-------------------
@@ -16876,8 +16973,10 @@ ol.ui.horizontal.list li:before,
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -16899,7 +16998,6 @@ ol.ui.horizontal.list li:before,
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -16926,31 +17024,6 @@ ol.ui.horizontal.list li:before,
 /*---  Standard  ---*/
 /*---  Emotive  ---*/
 /*---  Neutrals  ---*/
-/*******************************
-             Step
-*******************************/
-/*-------------------
-      Element
---------------------*/
-/* Icon */
-/* Title */
-/* Description */
-/* Arrow */
-/*-------------------
-       Group
---------------------*/
-/*-------------------
-       States
---------------------*/
-/* Completed */
-/* Hover */
-/* Down */
-/* Active */
-/* Active + Hover */
-/* Disabled */
-/*------------------
-     Load Theme
--------------------*/
 /*------------------
      Load Site
 -------------------*/
@@ -16961,7 +17034,7 @@ ol.ui.horizontal.list li:before,
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             Step
@@ -17087,7 +17160,7 @@ ol.ui.horizontal.list li:before,
   font-size: 0em;
   background: '';
   box-shadow: '';
-  line-height: 1.2;
+  line-height: 1.33;
   box-sizing: border-box;
   border-radius: 0.2857rem;
 }
@@ -17238,15 +17311,15 @@ ol.ui.horizontal.list li:before,
 *******************************/
 .ui.small.step,
 .ui.small.steps .step {
-  font-size: 0.9rem;
+  font-size: 0.9285em;
 }
 .ui.step,
 .ui.steps .step {
-  font-size: 1rem;
+  font-size: 1em;
 }
 .ui.large.step,
 .ui.large.steps .step {
-  font-size: 1.1rem;
+  font-size: 1.1428em;
 }
 /*******************************
            Overrides
@@ -17361,8 +17434,10 @@ ol.ui.horizontal.list li:before,
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -17384,7 +17459,6 @@ ol.ui.horizontal.list li:before,
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -17427,7 +17501,7 @@ ol.ui.horizontal.list li:before,
      User Global Variables
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
              Reset
@@ -17908,8 +17982,10 @@ th {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -17931,7 +18007,6 @@ th {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -17968,7 +18043,7 @@ th {
      User Global Variables
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
            Web Fonts
@@ -18146,8 +18221,10 @@ a:hover {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -18169,7 +18246,6 @@ a:hover {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -18231,7 +18307,7 @@ a:hover {
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             Accordion
@@ -18519,8 +18595,10 @@ a:hover {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -18542,7 +18620,6 @@ a:hover {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -18585,7 +18662,7 @@ a:hover {
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
            Chat Room
@@ -18923,8 +19000,10 @@ a:hover {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -18946,7 +19025,6 @@ a:hover {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -19009,7 +19087,7 @@ a:hover {
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
            Checkbox
@@ -19109,7 +19187,7 @@ a:hover {
 .ui.checkbox .box:hover::before,
 .ui.checkbox label:hover::before {
   background: #ffffff;
-  border: 1px solid rgba(39, 41, 43, 0.3);
+  border: 1px solid rgba(39, 41, 43, 0.2);
 }
 .ui.checkbox label:hover,
 .ui.checkbox + label:hover {
@@ -19121,7 +19199,7 @@ a:hover {
 .ui.checkbox .box:active::before,
 .ui.checkbox label:active::before {
   background: #f5f5f5;
-  border: 1px solid 1px solid rgba(39, 41, 43, 0.3);
+  border: 1px solid 1px solid rgba(39, 41, 43, 0.2);
 }
 .ui.checkbox input:active ~ label {
   color: rgba(0, 0, 0, 0.8);
@@ -19132,7 +19210,7 @@ a:hover {
 .ui.checkbox input:focus ~ .box:before,
 .ui.checkbox input:focus ~ label:before {
   background: #f5f5f5;
-  border: 1px solid 1px solid rgba(39, 41, 43, 0.3);
+  border: 1px solid 1px solid rgba(39, 41, 43, 0.2);
 }
 .ui.checkbox input:focus ~ label {
   color: rgba(0, 0, 0, 0.8);
@@ -19521,8 +19599,10 @@ a:hover {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -19544,7 +19624,6 @@ a:hover {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -19594,7 +19673,7 @@ a:hover {
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             Dimmer
@@ -19649,6 +19728,7 @@ a:hover {
 /*******************************
             States
 *******************************/
+.animating.dimmable:not(body),
 .dimmed.dimmable:not(body) {
   overflow: hidden;
 }
@@ -19678,6 +19758,7 @@ a:hover {
       -ms-transform-origin: center center;
           transform-origin: center center;
 }
+body.animating.in.dimmable,
 body.dimmed.dimmable {
   overflow: hidden;
 }
@@ -19836,8 +19917,10 @@ body.dimmed.dimmable > :not(.dimmer) {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -19859,7 +19942,6 @@ body.dimmed.dimmable > :not(.dimmer) {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -19886,9 +19968,6 @@ body.dimmed.dimmable > :not(.dimmer) {
 /*---  Standard  ---*/
 /*---  Emotive  ---*/
 /*---  Neutrals  ---*/
-/*------------------
-     Load Theme
--------------------*/
 /*******************************
             Dropdown
 *******************************/
@@ -19932,6 +20011,9 @@ b        Types
 /* Floating */
 /* Pointing */
 /*------------------
+     Load Theme
+-------------------*/
+/*------------------
      Load Site
 -------------------*/
 /*******************************
@@ -19941,7 +20023,7 @@ b        Types
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             Dropdown
@@ -20002,7 +20084,7 @@ b        Types
 .ui.dropdown .menu > .item .dropdown.icon {
   width: auto;
   float: right;
-  margin: 0.2em 0em 0em 0.5em;
+  margin: 0.2em 0em 0em;
 }
 /*--------------
       Text
@@ -20063,8 +20145,8 @@ b        Types
 /*--------------
    Item Image
 ---------------*/
-.ui.dropdown .text > img,
-.ui.dropdown .text > .image,
+.ui.dropdown > .text > img,
+.ui.dropdown > .text > .image,
 .ui.dropdown .menu > .item > .image,
 .ui.dropdown .menu > .item > img {
   display: inline-block;
@@ -20082,6 +20164,7 @@ b        Types
   right: auto !important;
   margin: 0em 0em 0em -0.5em !important;
   border-radius: 0em 0.2857rem 0.2857rem 0em !important;
+  z-index: 21 !important;
 }
 /* Hide Arrow */
 .ui.dropdown .menu .menu:after {
@@ -20092,16 +20175,20 @@ b        Types
 *******************************/
 /* Icons / Flags / Labels */
 .ui.dropdown > .text > .icon,
-.ui.dropdown .menu > .item .icon {
+.ui.dropdown .menu > .item > .icon {
   margin: 0em 0.75em 0em 0em;
 }
 .ui.dropdown > .text > .label,
-.ui.dropdown .menu > .item .label {
+.ui.dropdown .menu > .item > .label {
   margin: 0em 0.75em 0em 0em;
 }
 .ui.dropdown > .text > .flag,
-.ui.dropdown .menu > .item .flag {
+.ui.dropdown .menu > .item > .flag {
   margin: 0em 0.75em 0em 0em;
+}
+.ui.dropdown .menu > .item > .icon + .text {
+  display: block;
+  margin-right: 1em;
 }
 /* Remove Menu Item Divider */
 .ui.dropdown .ui.menu > .item:before,
@@ -20115,6 +20202,11 @@ b        Types
 /* No Margin On Icon Button */
 .ui.dropdown.icon.button > .dropdown.icon {
   margin: 0em;
+}
+.ui.dropdown.button:not(.pointing):not(.floating).active,
+.ui.dropdown.button:not(.pointing):not(.floating).visible {
+  border-bottom-left-radius: 0em;
+  border-bottom-right-radius: 0em;
 }
 /* Automatically float dropdown menu right on last menu item */
 .ui.menu .right.menu .dropdown:last-child .menu,
@@ -20172,6 +20264,10 @@ select.ui.dropdown {
   -webkit-transition: opacity 0.2s ease;
           transition: opacity 0.2s ease;
 }
+/* Compact */
+.ui.compact.selection.dropdown {
+  min-width: 0px;
+}
 /* Remove Selection */
 .ui.selection.dropdown > .delete.icon {
   opacity: 0.6;
@@ -20213,7 +20309,7 @@ select.ui.dropdown {
   min-width: -webkit-calc(100% + 2px);
   min-width: calc(100% + 2px);
   outline: none;
-  box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.08);
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.08);
   -webkit-transition: box-shadow 0.2s ease, border 0.2s ease;
           transition: box-shadow 0.2s ease, border 0.2s ease;
 }
@@ -20253,16 +20349,16 @@ select.ui.dropdown {
 }
 /* Hover */
 .ui.selection.dropdown:hover {
-  border-color: rgba(39, 41, 43, 0.3);
+  border-color: rgba(39, 41, 43, 0.2);
   box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.05);
 }
 /* Visible Hover */
 .ui.selection.visible.dropdown:hover {
-  border-color: rgba(39, 41, 43, 0.3);
+  border-color: rgba(39, 41, 43, 0.2);
   box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.08);
 }
 .ui.selection.visible.dropdown:hover .menu {
-  border: 1px solid rgba(39, 41, 43, 0.3);
+  border: 1px solid rgba(39, 41, 43, 0.2);
   box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.08);
 }
 /* Visible */
@@ -20274,8 +20370,8 @@ select.ui.dropdown {
   opacity: 1;
 }
 /* Active Item */
-.ui.selection.active.dropdown .text:not(.default),
-.ui.selection.visible.dropdown .text:not(.default) {
+.ui.selection.active.dropdown > .text:not(.default),
+.ui.selection.visible.dropdown > .text:not(.default) {
   font-weight: normal;
   color: rgba(0, 0, 0, 0.8);
 }
@@ -20297,7 +20393,7 @@ select.ui.dropdown {
   margin: 0em 0.5em 0em 0.25em;
   vertical-align: top;
 }
-.ui.inline.dropdown .text {
+.ui.inline.dropdown > .text {
   font-weight: bold;
 }
 .ui.inline.dropdown .menu {
@@ -20340,6 +20436,13 @@ select.ui.dropdown {
   color: rgba(140, 140, 140, 0.7);
 }
 /*--------------------
+        Loading
+----------------------*/
+.ui.loading.dropdown > .text {
+  -webkit-transition: none;
+          transition: none;
+}
+/*--------------------
     Keyboard Select
 ----------------------*/
 /* Selected Item */
@@ -20352,7 +20455,7 @@ select.ui.dropdown {
     Search Filtered
 ----------------------*/
 /* Filtered Item */
-.ui.dropdown .filtered.text {
+.ui.dropdown > .filtered.text {
   visibility: hidden;
 }
 .ui.dropdown .filtered.item {
@@ -20367,7 +20470,7 @@ select.ui.dropdown {
   color: #a94442;
 }
 .ui.selection.dropdown.error {
-  background: #fae8e8;
+  background: #fff0f0;
   border-color: #dbb1b1;
 }
 .ui.selection.dropdown.error:hover {
@@ -20759,8 +20862,10 @@ select.ui.dropdown {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -20782,7 +20887,6 @@ select.ui.dropdown {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -20843,7 +20947,7 @@ select.ui.dropdown {
            Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
              Modal
@@ -21317,8 +21421,10 @@ select.ui.dropdown {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -21340,7 +21446,6 @@ select.ui.dropdown {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -21402,7 +21507,7 @@ select.ui.dropdown {
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
              Nag
@@ -21612,8 +21717,10 @@ a.ui.nag {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -21635,7 +21742,6 @@ a.ui.nag {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -21700,7 +21806,7 @@ a.ui.nag {
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             Popup
@@ -22019,8 +22125,10 @@ a.ui.nag {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -22042,7 +22150,6 @@ a.ui.nag {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -22103,7 +22210,7 @@ a.ui.nag {
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 .ui.progress {
   position: relative;
@@ -22250,7 +22357,7 @@ a.ui.nag {
           animation: none !important;
 }
 .ui.progress.success > .label {
-  color: #336534;
+  color: #356e36;
 }
 /*--------------
      Warning
@@ -22264,7 +22371,7 @@ a.ui.nag {
           animation: none !important;
 }
 .ui.progress.warning > .label {
-  color: #785f33;
+  color: #825c01;
 }
 /*--------------
      Error
@@ -22278,7 +22385,7 @@ a.ui.nag {
           animation: none !important;
 }
 .ui.progress.error > .label {
-  color: #973d3b;
+  color: #912d2b;
 }
 /*--------------
      Active
@@ -22550,8 +22657,10 @@ a.ui.nag {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -22573,7 +22682,6 @@ a.ui.nag {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -22627,7 +22735,7 @@ a.ui.nag {
            Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
            Rating
@@ -22930,8 +23038,10 @@ a.ui.nag {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -22953,7 +23063,6 @@ a.ui.nag {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -23014,7 +23123,7 @@ a.ui.nag {
            Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
              Search
@@ -23321,8 +23430,10 @@ a.ui.nag {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -23344,7 +23455,6 @@ a.ui.nag {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -23393,7 +23503,7 @@ a.ui.nag {
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
               Shape
@@ -23610,8 +23720,10 @@ a.ui.nag {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -23633,7 +23745,6 @@ a.ui.nag {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -23676,7 +23787,7 @@ a.ui.nag {
            Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             Sidebar
@@ -24189,8 +24300,10 @@ a.ui.nag {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -24212,7 +24325,6 @@ a.ui.nag {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -24255,7 +24367,7 @@ a.ui.nag {
            Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             Sticky
@@ -24404,8 +24516,10 @@ a.ui.nag {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -24427,7 +24541,6 @@ a.ui.nag {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -24472,7 +24585,7 @@ a.ui.nag {
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
            UI Tabs
@@ -24620,8 +24733,10 @@ a.ui.nag {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -24643,7 +24758,6 @@ a.ui.nag {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -24686,7 +24800,7 @@ a.ui.nag {
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
           Transitions
@@ -24729,7 +24843,7 @@ a.ui.nag {
 }
 /* Visible */
 .visible.transition {
-  display: block;
+  display: block !important;
   visibility: visible !important;
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
@@ -25718,8 +25832,10 @@ a.ui.nag {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -25741,7 +25857,6 @@ a.ui.nag {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -25781,7 +25896,7 @@ a.ui.nag {
      User Global Variables
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             Video
@@ -25974,8 +26089,10 @@ a.ui.nag {
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -25997,7 +26114,6 @@ a.ui.nag {
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -26048,6 +26164,7 @@ a.ui.nag {
 /* Paragraph */
 /* Additional Content */
 /* Extra Links */
+/* Buttons */
 /*-------------------
       Variations
 --------------------*/
@@ -26068,7 +26185,7 @@ a.ui.nag {
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             Standard
@@ -26311,7 +26428,9 @@ a.ui.nag {
 .ui.card > .buttons:last-child,
 .ui.cards > .card > .button:last-child,
 .ui.card > .button:last-child {
-  margin-bottom: -1px;
+  margin: 0em -1px -0.2em;
+  width: -webkit-calc(100% +  2px );
+  width: calc(100% +  2px );
 }
 /*--------------
      Labels
@@ -26401,7 +26520,7 @@ a.ui.card:hover,
   z-index: 5;
   background: '';
   border: none;
-  box-shadow: 0px 0.2em 0px 0px #bebebf, 0px 0px 0px 1px rgba(39, 41, 43, 0.3);
+  box-shadow: 0px 0.2em 0px 0px #bebebf, 0px 0px 0px 1px rgba(39, 41, 43, 0.2);
 }
 /*--------------
    Card Count
@@ -26867,8 +26986,10 @@ a.ui.card:hover,
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -26890,7 +27011,6 @@ a.ui.card:hover,
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -26954,7 +27074,7 @@ a.ui.card:hover,
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             Standard
@@ -27260,8 +27380,10 @@ a.ui.card:hover,
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -27283,7 +27405,6 @@ a.ui.card:hover,
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -27353,7 +27474,7 @@ a.ui.card:hover,
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
          Activity Feed
@@ -27681,8 +27802,10 @@ a.ui.card:hover,
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -27704,7 +27827,6 @@ a.ui.card:hover,
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -27774,7 +27896,7 @@ a.ui.card:hover,
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
             Standard
@@ -28257,8 +28379,10 @@ a.ui.card:hover,
 /*-------------------
     Emotive Colors
 --------------------*/
-/* Mood */
-/* Status */
+/* Positive */
+/* Negative */
+/* Info */
+/* Warning */
 /*-------------------
      Neutral Text
 --------------------*/
@@ -28280,7 +28404,6 @@ a.ui.card:hover,
 /* Makes sure padded grid can fit at 320px */
 /* Used to match floats with text */
 /* Positive / Negative Dupes */
-/* Header Colors */
 /* Responsive */
 /* Columns */
 /*******************************
@@ -28344,7 +28467,7 @@ a.ui.card:hover,
     User Variable Overrides
 *******************************/
 /*------------------
- Override Mix-in
+   Override Mix-in
 -------------------*/
 /*******************************
            Statistic
